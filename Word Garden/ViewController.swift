@@ -19,7 +19,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("In viewDidLoad, is guessedLetterField the first responder?", guessedLetterField.isFirstResponder)
     }
     
     func updateUIAfterGuess() {
@@ -30,20 +29,16 @@ class ViewController: UIViewController {
     @IBAction func guessedLetterFieldChanged(_ sender: UITextField) {
         // This type of action is triggered at any key press in the text field
         // This is the second IBAction associated with the text field
-        print("Hey! the guessedLetterFieldChanged!!!")
     }
     
     @IBAction func doneKeyPressed(_ sender: UITextField) {
         // Primary action triggered is the done key being pressed on keyboard
-        print("In doneKeyPressed, is guessedLetterField the first responder before update?", guessedLetterField.resignFirstResponder())
         updateUIAfterGuess()
-        print("In doneKeyPressed, is guessedLetterField the first responder after update?", guessedLetterField.resignFirstResponder())
     }
 
     @IBAction func guessLetterButtonPressed(_ sender: UIButton) {
-        print("In guessLetterButtonPressed, is guessedLetterField the first responder before update?", guessedLetterField.resignFirstResponder())
         updateUIAfterGuess()
-        print("In guessLetterButtonPressed, is guessedLetterField the first responder after update?", guessedLetterField.resignFirstResponder())
+
 
     }
     
