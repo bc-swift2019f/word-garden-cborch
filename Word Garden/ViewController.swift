@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  Word Garden
+//  Word Garden!
 //
 //  Created by Carter Borchetta on 9/15/19.
 //  Copyright © 2019 Carter Borchetta. All rights reserved.
