@@ -9,7 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    // Implicitly unwrapped optionals
+    // Creating these containers without putting anything in them
+    // Treat them like not optionlas becuase we know we're gonna have something there
+    // Don't need to treat it like optional in rest of code
     @IBOutlet weak var userGuessLabel: UILabel!
     @IBOutlet weak var guessedLetterField: UITextField!
     @IBOutlet weak var guessLetterButton: UIButton!
@@ -19,6 +22,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        guessLetterButton.isEnabled = false
+        playAgainButton.isHidden = true
     }
     
     func updateUIAfterGuess() {
@@ -29,6 +34,24 @@ class ViewController: UIViewController {
     @IBAction func guessedLetterFieldChanged(_ sender: UITextField) {
         // This type of action is triggered at any key press in the text field
         // This is the second IBAction associated with the text field
+        if let letterGuessed = guessedLetterField.text?.last {
+            // Attempt tp assign letterGuessed the last char of the text in the text field
+            // Chaining nills
+            // - the text field coud possibly return nil as could the result of.last
+            // - thats why both of these things are optionals and why Xcode suggests a question mark after .text
+            // - XCode will evaluate each thing that could be nil to see if it can make the assignment
+            // Sees if .text is nill
+            // - if it is it short circuits(moves to else)
+            // - if not checks if .last is nil
+            // - if it is it moves to else
+            // - if not it makes the assignment
+            guessedLetterField.text = String(letterGuessed)
+            guessLetterButton.isEnabled = true
+        } else {
+            // Will be getting nil if there is an empty string becuase "".last is nil
+            guessLetterButton.isEnabled = false
+            
+        }
     }
     
     @IBAction func doneKeyPressed(_ sender: UITextField) {
@@ -38,14 +61,17 @@ class ViewController: UIViewController {
 
     @IBAction func guessLetterButtonPressed(_ sender: UIButton) {
         updateUIAfterGuess()
-
-
     }
     
     @IBAction func playAgainButtonPressed(_ sender: UIButton) {
     }
 
 }
+
+// 3.3 Notes
+// Implicitly unwrapped optionals
+// We are defining something that we know has no value currently but that we are goubg to initialize later before we need it
+// - Use ! so say lets just treat it not as optional becuase we know we'll fix it before we use it
 
 // 3.2 Notes
 // First responder is the field or area that has first prtioty in collecting key presses or gestures
