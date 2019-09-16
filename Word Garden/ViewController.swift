@@ -20,8 +20,16 @@ class ViewController: UIViewController {
     @IBOutlet weak var playAgainButton: UIButton!
     @IBOutlet weak var flowerImageView: UIImageView!
     
+    var wordToGuess = "SWIFT"
+    var lettersGuessed = ""
+    let maxNumberOfWrongGuesses = 8
+    var wrongGuessesRemaining = 8
+    var guessCount = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        formatUserGuessLabel()
+        // Starts as an empty string with the text field also being an empty string sdo this call will just print the proper number of dashes
         guessLetterButton.isEnabled = false
         playAgainButton.isHidden = true
     }
@@ -29,6 +37,54 @@ class ViewController: UIViewController {
     func updateUIAfterGuess() {
         guessedLetterField.resignFirstResponder() // Dismisses keyboard from text field which is first responder at the time
         guessedLetterField.text = ""
+    }
+    
+    func formatUserGuessLabel() {
+        var revealedWord = ""
+        lettersGuessed += guessedLetterField.text!
+        // Can force unwrap text fields becuase when they are empty they contain ""
+        
+        for letter in wordToGuess {
+            if lettersGuessed.contains(letter) {
+                revealedWord = revealedWord + " \(letter)"
+            } else {
+                revealedWord = revealedWord + " _"
+            }
+        }
+        revealedWord.removeFirst()
+        userGuessLabel.text = revealedWord
+    }
+    
+    func guessALetter() {
+        formatUserGuessLabel()
+        guessCount += 1
+        
+        // Decrement the wrong guesses remaining and shows the next flower image with 1 less petal
+        let currentLetterGuessed = guessedLetterField.text!
+        if !wordToGuess.contains(currentLetterGuessed) {
+            wrongGuessesRemaining -= 1
+            flowerImageView.image = UIImage(named: "flower\(wrongGuessesRemaining)")
+        }
+        
+        let revealedWord = userGuessLabel.text!
+        // Stop game if wrongGuessesRemaining = 0
+        if wrongGuessesRemaining == 0 {
+            playAgainButton.isHidden = false
+            guessedLetterField.isEnabled = false
+            guessLetterButton.isEnabled = false
+            guessCountLabel.text = " So sorry, you're all out of guesses. Try again?"
+        } else if !revealedWord.contains("_") {
+            // You've won the game so we have to end the game in this case as well
+            playAgainButton.isHidden = false
+            guessedLetterField.isEnabled = false
+            guessLetterButton.isEnabled = false
+            guessCountLabel.text = "You've got it! It took you \(guessCount) guesses to guess the word!"
+        } else {
+            // Update our guess count label
+            let guess = (guessCount == 1 ? "Guess" : "Guesses" )
+            
+            guessCountLabel.text = "You've Made \(guessCount) \(guess)"
+        }
     }
     
     @IBAction func guessedLetterFieldChanged(_ sender: UITextField) {
@@ -55,18 +111,35 @@ class ViewController: UIViewController {
     }
     
     @IBAction func doneKeyPressed(_ sender: UITextField) {
+        guessALetter()
         // Primary action triggered is the done key being pressed on keyboard
         updateUIAfterGuess()
     }
 
     @IBAction func guessLetterButtonPressed(_ sender: UIButton) {
+        guessALetter()
         updateUIAfterGuess()
     }
     
     @IBAction func playAgainButtonPressed(_ sender: UIButton) {
+        playAgainButton.isHidden = true
+        guessedLetterField.isEnabled = true
+        guessLetterButton.isEnabled = false
+        // Don't want to enable until we type something in
+        
+        flowerImageView.image = UIImage(named: "flower8")
+        wrongGuessesRemaining = maxNumberOfWrongGuesses
+        lettersGuessed = ""
+        
+        formatUserGuessLabel()
+        // To mimic viewDidLoad Start
+        guessCountLabel.text = "You've Made 0 Guesses"
+        guessCount = 0
     }
 
 }
+
+// 3.4 Notes
 
 // 3.3 Notes
 // Implicitly unwrapped optionals
